@@ -12,6 +12,8 @@ import search_icon from "../assets/search.png";
 
 // import meta.APP_API_KEY from "env";
     export default function Weather(props){
+        const apiKey = process.env.REACT_APP_WEATHER_API_KEY;
+
         const [location, setLocation] = useState(null);
         const handleKeyDown = (event) => {
             console.log(event.key)
@@ -52,7 +54,7 @@ import search_icon from "../assets/search.png";
             }
 
             // Make API call to OpenWeatherMap
-            fetch(`${import.meta.env.VITE_REACT_APP_API_URL}/weather?lat=${latitude}&lon=${longitude}&appid=${import.meta.env.VITE_APP_API_KEY}&units=metric`)
+            fetch(`api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`)
               .then(response => response.json())
               .then(data => {
                 // setWeather(data);
@@ -125,7 +127,7 @@ import search_icon from "../assets/search.png";
                 return;
             }
             try {
-                const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=Imperial&appid=${import.meta.env.VITE_APP_API_KEY}`;
+                const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=Imperial&appid=${apiKey}`;
                 
                 const response = await fetch(url);
                 const data = await response.json();
