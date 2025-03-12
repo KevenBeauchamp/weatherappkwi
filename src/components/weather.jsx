@@ -12,8 +12,11 @@ import search_icon from "../assets/search.png";
 
 // import meta.APP_API_KEY from "env";
     export default function Weather(props){
-        const apiKey = process.env.REACT_APP_WEATHER_API_KEY;
-
+        // const apiKey = process.env.REACT_APP_WEATHER_API_KEY;
+        const apiKey = import.meta.env.VITE_APP_API_KEY;
+        // console.log( process.env)
+        
+        // console.log(process.env)
         const [location, setLocation] = useState(null);
         const handleKeyDown = (event) => {
             console.log(event.key)
@@ -54,7 +57,7 @@ import search_icon from "../assets/search.png";
             }
 
             // Make API call to OpenWeatherMap
-            fetch(`api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`)
+            fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`)
               .then(response => response.json())
               .then(data => {
                 // setWeather(data);
@@ -100,7 +103,26 @@ import search_icon from "../assets/search.png";
             return formattedTime;
             
         }
-        console.log()
+        function convertTimestampToDatetime(timestamp) {
+            const date = new Date(timestamp * 1000);
+          
+            const options = {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+              hour: 'numeric',
+              minute: 'numeric',
+              second: 'numeric',
+              timeZoneName: 'short'
+            };
+          
+            return date.toLocaleString(undefined, options);
+          }
+
+          function unixTimestampToGmtDatetime(unixTimestamp) {
+            const date = new Date(unixTimestamp * 1000);
+            return date.toUTCString();
+          }
         const [weather_data, setWeather] = useState(false);
         const inputSearchRef = useRef();
 
@@ -135,7 +157,7 @@ import search_icon from "../assets/search.png";
                     alert(data.message);
                     return;
                 }
-                console.log(data);
+                console.log(response);
                 // const icone = allICons[data.Weather[0].icon] || clear_icon
                 // console.log(data.Weather[0].icon)
                 // console.log(allICons[data.Weather[0].icon])
@@ -148,8 +170,8 @@ import search_icon from "../assets/search.png";
                     wind: data.wind.speed,
                     temperature: Math.floor(data.main.temp),
                     location: data.name,
-                    sunrise:convert(data.sys.sunrise,data.timezone),
-                    sunset: convert(data.sys.sunset,data.timezone),
+                    sunrise:unixTimestampToGmtDatetime(data.sys.sunrise,data.timezone),
+                    sunset: unixTimestampToGmtDatetime(data.sys.sunset,data.timezone),
                     feels_like: Math.floor(data.main.feels_like), 
                     icons: allICons[icon]
                 })
@@ -159,44 +181,11 @@ import search_icon from "../assets/search.png";
             }
             
         }
-        const searchWeatherByLongAndLat = async (long,lat) => {
-            
-            try {
-                const url = `https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid=19bcc9cffb3ccd255e258e8671858415`;
-                
-                const response = await fetch(url);
-                const data = await response.json();
-                if(!response.ok){
-                    alert(data.message);
-                    return;
-                }
-                console.log(data);
-                // const icone = allICons[data.Weather[0].icon] || clear_icon
-                // console.log(data.Weather[0].icon)
-                // console.log(allICons[data.Weather[0].icon])
-                const icon = data.weather[0].icon;
-                // console.log(icon)
-                // console.log()
-                
-                setWeather({
-                    humidity: data.main.humidity,
-                    wind: data.wind.speed,
-                    temperature: Math.floor(data.main.temp),
-                    location: data.name,
-                    sunrise:convert(data.sys.sunrise),
-                    sunset: convert(data.sys.sunset),
-                    feels_like: Math.floor(data.main.feels_like), 
-                    icons: allICons[icon]
-                })
-            } catch (error) {
-                setWeather(false);
-                // console.error("Error data");
-            }
-            
-        }
+
         useEffect(
             ()=>{
                 handleLocationClick()
+                
             },[]
         )
         
@@ -239,11 +228,11 @@ import search_icon from "../assets/search.png";
                                 </div>
                             </div>                         
                         </div>
-                        {/* <div className="content">
+                        {/* <div className="content"> */}
                             
-                            <p className='margeRight'>Sunrise : {weather_data.sunrise}</p>
-                            <p>Sunset : {weather_data.sunset}</p>
-                        </div> */}
+                            {/* <p className='margeRight'>Sunrise : {weather_data.sunrise}</p> */}
+                            {/* <p>Sunset : {weather_data.sunset}</p> */}
+                        {/* </div> */}
 
                     </div>
                  </div>
